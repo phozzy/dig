@@ -1,0 +1,6 @@
+**.swp
+**.retry
+**.tfstate*
+**.tfvars*
+.terraform
+key.json
