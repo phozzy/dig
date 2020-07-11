@@ -2,7 +2,7 @@ SHELL := /bin/bash
 ACCOUNT_NAME = terraform
 ACCOUNT_DISPLAY_NAME = Terraform SA for cluster
 ACCOUNT_DESCRIPTION = Terraform service account for Cluster
-PROJECT_NAME := $(shell gcloud config configurations list --format="value(properties.core.project)")
+PROJECT_NAME := dinsurance
 SA_EMAIL = $(ACCOUNT_NAME)@$(PROJECT_NAME).iam.gserviceaccount.com
 KEY_FILE = key.json
 MAIN_REGION = us-central1
@@ -10,6 +10,14 @@ CLUSTER_NAME = dinsurance
 
 
 export GOOGLE_CLOUD_KEYFILE_JSON =$(KEY_FILE)
+
+.PHONY : ready
+
+ready :
+	@gcloud config set project $(PROJECT_NAME)
+	@gcloud services enable compute.googleapis.com
+	@gcloud services enable cloudresourcemanager.googleapis.com
+	@gcloud services enable container.googleapis.com
 
 .PHONY : sa-create sa-delete
 
