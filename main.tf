@@ -104,3 +104,17 @@ resource "helm_release" "prometheus-operator" {
     "${file("./helm/prometheus-operator/values.yaml")}"
   ]
 }
+resource "helm_release" "nginx-ingress" {
+  name       = "nginx-ingress-dinsurance"
+  repository = "https://kubernetes-charts.storage.googleapis.com"
+  chart      = "nginx-ingress"
+
+  set {
+    name = "controller.service.loadBalancerIP"
+    value = google_compute_address.nginx-ingress-ip.address
+  }
+
+  values = [
+    "${file("./helm/ingress/values.yaml")}"
+  ]
+}

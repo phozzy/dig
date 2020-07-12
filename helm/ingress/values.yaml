@@ -1,0 +1,10 @@
+controller:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  publishService:
+    enabled: true
