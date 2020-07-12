@@ -95,6 +95,9 @@ resource "helm_release" "prometheus-operator" {
   ]
 }
 resource "helm_release" "nginx-ingress" {
+  depends_on = [
+    helm_release.prometheus-operator,
+  ]
   name       = "nginx-ingress-dinsurance"
   repository = "https://kubernetes-charts.storage.googleapis.com"
   chart      = "nginx-ingress"
@@ -110,7 +113,7 @@ resource "helm_release" "nginx-ingress" {
 }
 resource "helm_release" "hello-app" {
   depends_on = [
-    google_container_node_pool.primary_preemptible_nodes,
+    helm_release.nginx-ingress,
   ]
   name = "hello-app"
   chart = "./helm/hello-app"
