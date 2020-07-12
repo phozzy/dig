@@ -108,3 +108,10 @@ resource "helm_release" "nginx-ingress" {
     "${file("./helm/ingress/values.yaml")}"
   ]
 }
+resource "helm_release" "hello-app" {
+  depends_on = [
+    google_container_node_pool.primary_preemptible_nodes,
+  ]
+  name = "hello-app"
+  chart = "./helm/hello-app"
+}
