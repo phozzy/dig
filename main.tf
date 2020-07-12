@@ -66,11 +66,41 @@ resource "kubernetes_namespace" "monitoring" {
     annotations = {
       name = "monitoring"
     }
-
     labels = {
       workload = "monitoring"
     }
-
     name = "monitoring"
   }
+}
+resource "google_compute_address" "nginx-ingress-ip" {
+  depends_on = [
+    google_container_node_pool.primary_preemptible_nodes,
+  ]
+  name     = "nginx-ingress-controller"
+  provider = google-beta
+}
+resource "helm_release" "prometheus-operator" {
+  depends_on = [
+    google_container_node_pool.primary_preemptible_nodes,
+  ]
+  repository = "https://kubernetes-charts.storage.googleapis.com"
+  name  = "prometheus-operator"
+  chart = "prometheus-operator"
+  namespace = "${kubernetes_namespace.monitoring.metadata.0.name}"
+
+  timeout = 1200
+
+  set {
+    name  = "prometheus.service.loadBalancerIP"
+    value = google_compute_address.nginx-ingress-ip.address
+  }
+
+  set {
+    name  = "alertmanager.service.loadBalancerIP"
+    value = google_compute_address.nginx-ingress-ip.address
+  }
+
+  values = [
+    "${file("./helm/prometheus-operator/values.yaml")}"
+  ]
 }

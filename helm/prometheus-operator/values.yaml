@@ -1,0 +1,43 @@
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigsExternal: true
+  additionalServiceMonitors:
+  - name: nginx-ingress-service-monitor
+    jobLabel: nginx-ingress
+    selector:
+      matchLabels:
+        app: nginx-ingress
+        release: nginx-ingress-dinsurance
+    namespaceSelector:
+      matchNames:
+      - default
+    endpoints:
+    - port: metrics
+      interval: 30s
+  service:
+    type: LoadBalancer
+alertmanager:
+  service:
+    type: LoadBalancer
+grafana:
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'nginx-ingress'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: true
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/nginx-ingress
+  dashboards:
+    nginx-ingress:
+      nginx-ingress-controller:
+        datasource: Prometheus
+        gnetId: 9614
+        revision: 1
+  service:
+    type: LoadBalancer
+    port: 3000

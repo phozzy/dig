@@ -72,13 +72,13 @@ ingress-destroy :
 	helm uninstall external
 
 prom-deploy :
-	helm install prometheus stable/prometheus-operator --values=./helm/prometheus-operator/values.yaml --version=8.12.3
+	helm install prometheus stable/prometheus-operator --values=./helm/prometheus-operator/values.yaml --version=8.12.3 --namespace monitoring
 
 prom-upgrade :
-	helm upgrade --install prometheus stable/prometheus-operator --values=./helm/prometheus-operator/values.yaml --version=8.12.3
+	helm upgrade --install prometheus stable/prometheus-operator --values=./helm/prometheus-operator/values.yaml --version=8.12.3 --namespace monitoring
 
 prom-destroy :
-	helm uninstall prometheus
+	helm uninstall prometheus --namespace monitoring
 	kubectl delete crd prometheusrules.monitoring.coreos.com
 	kubectl delete crd servicemonitors.monitoring.coreos.com
 	kubectl delete crd alertmanagers.monitoring.coreos.com
