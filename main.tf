@@ -90,16 +90,6 @@ resource "helm_release" "prometheus-operator" {
 
   timeout = 1200
 
-  set {
-    name  = "prometheus.service.loadBalancerIP"
-    value = google_compute_address.nginx-ingress-ip.address
-  }
-
-  set {
-    name  = "alertmanager.service.loadBalancerIP"
-    value = google_compute_address.nginx-ingress-ip.address
-  }
-
   values = [
     "${file("./helm/prometheus-operator/values.yaml")}"
   ]

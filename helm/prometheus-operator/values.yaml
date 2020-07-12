@@ -1,21 +1,9 @@
 prometheus:
-  prometheusSpec:
-    additionalScrapeConfigsExternal: true
-  additionalServiceMonitors:
-  - name: nginx-ingress-service-monitor
-    jobLabel: nginx-ingress
-    selector:
-      matchLabels:
-        app: nginx-ingress
-        release: nginx-ingress-dinsurance
-    namespaceSelector:
-      matchNames:
-      - default
-    endpoints:
-    - port: metrics
-      interval: 30s
   service:
     type: LoadBalancer
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+  enabled: true
 alertmanager:
   service:
     type: LoadBalancer
